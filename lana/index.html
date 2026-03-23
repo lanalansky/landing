@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lana Lansky — Контент-система с окупаемым трафиком</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0e0e0e;
+      --card:      #171717;
+      --card2:     #1e1e1e;
+      --orange:    #e85d20;
+      --orange-h:  #ff6b2b;
+      --white:     #ffffff;
+      --gray:      #999999;
+      --gray2:     #555;
+      --border:    rgba(255,255,255,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ─── HEADER ─── */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(14,14,14,0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      background: var(--orange) !important;
+      color: var(--white) !important;
+      padding: 9px 22px;
+      border-radius: 8px;
+      font-weight: 600 !important;
+      font-size: 14px !important;
+      transition: background 0.2s, transform 0.15s !important;
+    }
+    .nav-cta:hover { background: var(--orange-h) !important; transform: translateY(-1px); }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .burger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 62px; left: 0; right: 0;
+      background: rgba(14,14,14,0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      z-index: 99;
+      flex-direction: column;
+      gap: 0;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--gray);
+      text-decoration: none;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .mobile-menu a:last-child { border-bottom: none; color: var(--orange); font-weight: 600; }
+    .mobile-menu a:hover { color: var(--white); }
+
+    /* ─── CONTAINERS ─── */
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section { padding: 96px 0; }
+
+    .s-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 14px;
+    }
+
+    .s-title {
+      font-size: clamp(28px, 4.5vw, 48px);
+      font-weight: 800;
+      line-height: 1.12;
+      margin-bottom: 14px;
+    }
+
+    .s-sub {
+      font-size: 15px;
+      color: var(--gray);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    .s-header { margin-bottom: 52px; }
+
+    /* ─── HERO ─── */
+    .hero-wrap {
+      min-height: 100vh;
+      padding-top: 62px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 32px;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding-left: 24px;
+      padding-right: 0;      /* фото уходит вправо до края */
+      overflow: visible;
+    }
+
+    .hero-left { padding-top: 32px; }
+
+    .hero-title {
+      font-size: clamp(34px, 5.5vw, 62px);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      color: var(--gray);
+      max-width: 420px;
+      line-height: 1.72;
+      margin-bottom: 36px;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.2s;
+      white-space: nowrap;
+    }
+    .btn-fill {
+      background: linear-gradient(135deg, var(--orange) 0%, #c44810 100%);
+      color: var(--white);
+      border: 1px solid rgba(232,93,32,0.5);
+      box-shadow: 0 4px 20px rgba(232,93,32,0.3), 0 1px 0 rgba(255,255,255,0.1) inset;
+    }
+    .btn-fill:hover {
+      background: linear-gradient(135deg, var(--orange-h) 0%, var(--orange) 100%);
+      border-color: rgba(232,93,32,0.7);
+      box-shadow: 0 8px 32px rgba(232,93,32,0.45), 0 1px 0 rgba(255,255,255,0.1) inset;
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.35); transform: translateY(-1px); }
+
+    .hero-stats {
+      display: flex;
+      gap: 44px;
+      flex-wrap: wrap;
+    }
+
+    .stat { display: flex; flex-direction: column; }
+    .stat-n {
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+    .stat-l {
+      font-size: 12px;
+      color: var(--gray);
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    /* Hero right — visual placeholder */
+    .hero-right {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 0;
+      overflow: visible;
+    }
+
+    .hero-visual {
+      width: 100%;
+      max-width: 580px;
+      aspect-ratio: 3/4;
+      position: relative;
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+    }
+
+    /* Photo — бесшовный переход в фон через mask */
+    .hero-photo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 105%;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 0;
+      display: block;
+
+      /* Три градиента маски пересекаются — итог: мягкое растворение по краям */
+      -webkit-mask-image:
+        linear-gradient(to right,  transparent 0%,  black 22%),   /* левый fade  */
+        linear-gradient(to bottom, transparent 0%,  black 13%),   /* верхний fade */
+        linear-gradient(to top,    transparent 6%,  black 30%);   /* нижний fade  */
+      -webkit-mask-composite: source-in, source-in;
+
+      mask-image:
+        linear-gradient(to right,  transparent 0%,  black 22%),
+        linear-gradient(to bottom, transparent 0%,  black 13%),
+        linear-gradient(to top,    transparent 6%,  black 30%);
+      mask-composite: intersect, intersect;
+    }
+
+    /* Источники света — на уровне hero-секции, правая половина страницы */
+    .photo-light {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      mix-blend-mode: screen;   /* screen: оранжевый на тёмном = свет, на светлом = нейтрально */
+      filter: blur(90px);       /* мягкое рассеивание, как настоящий источник */
+    }
+    /* Верхний правый — контровой, холодно-оранжевый */
+    .photo-light-tr {
+      top: -10%;
+      right: 0;
+      width: 36%;
+      height: 55%;
+      background: rgba(230, 100, 15, 0.30);
+    }
+    /* Нижний правый — тёплый янтарный заполняющий */
+    .photo-light-br {
+      bottom: 0;
+      right: 32%;
+      width: 32%;
+      height: 48%;
+      background: rgba(195, 75, 5, 0.25);
+    }
+
+    /* Лёгкий фад снизу — чтобы пилюли читались на фото */
+    .hero-visual-grad { display: none; }
+
+    .hero-visual-text {
+      text-align: center;
+      z-index: 1;
+      padding: 32px;
+    }
+    .hero-visual-text .big {
+      font-size: 96px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.05);
+      line-height: 1;
+      letter-spacing: -4px;
+    }
+    .hero-visual-text .label {
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .hero-visual-text .sub {
+      font-size: 12px;
+      color: var(--gray2);
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Orange glow dot decoration */
+    .hero-dot {
+      position: absolute;
+      bottom: 40px;
+      left: 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-dot-circle {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+    .hero-dot-text { font-size: 12px; color: var(--gray); font-weight: 500; }
+
+    /* ─── HERO ANIMATED BACKGROUND ─── */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .hb-orb {
+      position: absolute;
+      border-radius: 50%;
+      mix-blend-mode: screen;
+    }
+    /* Большой шар — плавает сверху-центра */
+    .hb-orb1 {
+      width: 70vw; height: 70vw;
+      top: -30%; left: -10%;
+      background: radial-gradient(ellipse at center,
+        rgba(210, 65, 5, 0.60) 0%,
+        rgba(180, 40, 0, 0.30) 40%,
+        transparent 70%);
+      filter: blur(60px);
+      animation: orbFloat1 14s ease-in-out infinite;
+    }
+    /* Средний — низ-право */
+    .hb-orb2 {
+      width: 50vw; height: 50vw;
+      bottom: -20%; right: -5%;
+      background: radial-gradient(ellipse at center,
+        rgba(200, 55, 5, 0.50) 0%,
+        rgba(160, 30, 0, 0.25) 45%,
+        transparent 70%);
+      filter: blur(70px);
+      animation: orbFloat2 10s ease-in-out infinite;
+    }
+    /* Маленький — центр, тёплый акцент */
+    .hb-orb3 {
+      width: 30vw; height: 30vw;
+      top: 25%; left: 35%;
+      background: radial-gradient(ellipse at center,
+        rgba(240, 100, 15, 0.35) 0%,
+        transparent 65%);
+      filter: blur(55px);
+      animation: orbFloat3 18s ease-in-out infinite;
+    }
+    /* Луч света сверху вниз */
+    .hb-beam {
+      position: absolute;
+      width: 3px;
+      height: 55%;
+      top: 0; left: 52%;
+      transform: translateX(-50%);
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(240, 130, 20, 0.65) 30%,
+        rgba(220, 80, 5, 0.55) 60%,
+        transparent 100%);
+      filter: blur(4px);
+      box-shadow: 0 0 18px rgba(240, 120, 20, 0.5),
+                  0 0 60px rgba(210, 70, 5, 0.25);
+      animation: beamPulse 10s ease-in-out infinite;
+      border-radius: 2px;
+    }
+
+    @keyframes orbFloat1 {
+      0%, 100% { transform: translate(0,   0)    scale(1);    opacity: 0.85; }
+      30%       { transform: translate(8%,  12%)  scale(1.08); opacity: 1;    }
+      65%       { transform: translate(-6%, -8%)  scale(0.94); opacity: 0.75; }
+    }
+    @keyframes orbFloat2 {
+      0%, 100% { transform: translate(0,    0)    scale(1);    opacity: 0.80; }
+      45%       { transform: translate(-12%, -18%) scale(1.12); opacity: 0.95; }
+    }
+    @keyframes orbFloat3 {
+      0%, 100% { transform: translate(0,   0)   opacity: 0.55; }
+      35%       { transform: translate(10%, 14%); opacity: 0.80; }
+      70%       { transform: translate(-8%, -5%); opacity: 0.40; }
+    }
+    @keyframes beamPulse {
+      0%,  15% { opacity: 0;    transform: translateX(-50%) scaleX(1);    }
+      25%, 65% { opacity: 1;    transform: translateX(-50%) scaleX(1);    }
+      70%       { opacity: 0.8;  transform: translateX(-50%) scaleX(1.6);  }
+      85%, 100% { opacity: 0;    transform: translateX(-50%) scaleX(1);    }
+    }
+
+    /* ─── PROCESS ─── */
+    .process { background: #080808; }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .proc-card {
+      background: linear-gradient(145deg, rgba(25,25,25,0.95), rgba(18,18,18,0.98));
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 26px 22px;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .proc-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(232,93,32,0.4), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .proc-card:hover {
+      border-color: rgba(232,93,32,0.25);
+      box-shadow: 0 8px 32px rgba(232,93,32,0.08), 0 2px 8px rgba(0,0,0,0.4);
+      transform: translateY(-2px);
+    }
+    .proc-card:hover::before { opacity: 1; }
+
+    .proc-badge {
+      display: inline-block;
+      background: rgba(232,93,32,0.12);
+      border: 1px solid rgba(232,93,32,0.22);
+      color: var(--orange);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border-radius: 5px;
+      margin-bottom: 14px;
+    }
+
+    .proc-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 14px; }
+
+    .proc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .proc-list li {
+      font-size: 13px;
+      color: var(--gray);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .proc-list li::before {
+      content: '–';
+      color: var(--orange);
+      flex-shrink: 0;
+    }
+
+    /* ─── NICHE ─── */
+    .niche {
+      background: var(--bg);
+      padding: 96px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .niche::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(232,93,32,0.14) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .niche h2 {
+      font-size: clamp(32px, 5.5vw, 60px);
+      font-weight: 900;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 30%, rgba(232,93,32,0.85) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .niche p {
+      font-size: 15px;
+      color: var(--gray);
+      margin-top: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── FORMATS ─── */
+    .formats { background: #080808; }
+
+    .formats-note {
+      font-size: 14px;
+      color: var(--gray);
+      margin-top: 10px;
+    }
+
+    .formats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .fmt-card {
+      background: linear-gradient(160deg, rgba(24,24,24,0.96), rgba(16,16,16,0.98));
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      padding: 30px 26px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.25s;
+      backdrop-filter: blur(8px);
+    }
+    .fmt-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top left, rgba(232,93,32,0.07) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .fmt-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(232,93,32,0.2);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 0 1px rgba(232,93,32,0.07);
+    }
+    .fmt-card.popular {
+      border-color: rgba(232,93,32,0.5);
+      background: linear-gradient(160deg, rgba(28,22,18,0.98), rgba(18,14,10,0.99));
+      box-shadow: 0 0 0 1px rgba(232,93,32,0.15), 0 24px 60px rgba(232,93,32,0.12);
+    }
+    .fmt-card.popular::after {
+      background: radial-gradient(ellipse at top right, rgba(232,93,32,0.15) 0%, transparent 60%);
+    }
+
+    .pop-badge {
+      position: absolute;
+      top: 18px; right: 18px;
+      background: var(--orange);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 5px;
+    }
+
+    .fmt-title { font-size: 19px; font-weight: 700; margin-bottom: 20px; }
+
+    .fmt-list {
+      list-style: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+    .fmt-list li {
+      font-size: 13px;
+      color: var(--gray);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .fmt-list li::before {
+      content: '◦';
+      color: var(--orange);
+      flex-shrink: 0;
+      font-size: 16px;
+      line-height: 1;
+      margin-top: 1px;
+    }
+
+    .card-btn {
+      display: block;
+      text-align: center;
+      padding: 12px 16px;
+      border-radius: 9px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+    .card-btn-outline {
+      border: 1px solid var(--border);
+      color: var(--white);
+    }
+    .card-btn-outline:hover { border-color: rgba(232,93,32,0.5); background: rgba(232,93,32,0.06); }
+    .card-btn-fill {
+      background: var(--orange);
+      color: var(--white);
+      border: 1px solid var(--orange);
+    }
+    .card-btn-fill:hover { background: var(--orange-h); border-color: var(--orange-h); }
+
+    /* ─── EXTRA SERVICES (from Excel Sheet 1) ─── */
+    .extra { background: var(--bg); }
+
+    .extra-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .extra-card {
+      background: linear-gradient(145deg, rgba(22,22,22,0.95), rgba(15,15,15,0.98));
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+    .extra-card:hover {
+      border-color: rgba(232,93,32,0.22);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    }
+    .extra-card.open {
+      border-color: rgba(232,93,32,0.4);
+      box-shadow: 0 0 0 1px rgba(232,93,32,0.08), 0 12px 40px rgba(232,93,32,0.1);
+    }
+
+    /* Clickable header row */
+    .extra-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 22px 22px;
+      user-select: none;
+    }
+
+    .extra-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      background: rgba(232,93,32,0.10);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .extra-meta { flex: 1; min-width: 0; }
+    .extra-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+    .extra-card p  { font-size: 12px; color: var(--gray); line-height: 1.55; }
+
+    /* Arrow chevron */
+    .extra-arrow {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, border-color 0.25s, background 0.25s;
+    }
+    .extra-arrow svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--gray);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.25s;
+    }
+    .extra-card.open .extra-arrow {
+      transform: rotate(180deg);
+      border-color: rgba(232,93,32,0.45);
+      background: rgba(232,93,32,0.10);
+    }
+    .extra-card.open .extra-arrow svg { stroke: var(--orange); }
+
+    /* Collapsible body */
+    .extra-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.28s ease,
+                  padding 0.28s ease;
+      opacity: 0;
+      padding: 0 22px;
+    }
+    .extra-card.open .extra-body {
+      max-height: 400px;
+      opacity: 1;
+      padding: 0 22px 20px;
+    }
+
+    /* Divider line above body */
+    .extra-body-inner {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    .extra-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .extra-items li {
+      font-size: 13px;
+      color: var(--gray);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .extra-items li::before {
+      content: '›';
+      color: var(--orange);
+      flex-shrink: 0;
+      font-size: 15px;
+      line-height: 1.1;
+    }
+
+    /* Last card span full width if 5 cards in 3-col grid */
+    @media (min-width: 1025px) {
+      .extra-grid .extra-card:nth-child(4) { grid-column: 1; }
+      .extra-grid .extra-card:nth-child(5) { grid-column: 2 / 4; }
+    }
+
+    /* ─── CTA ─── */
+    .cta {
+      background: #080808;
+      text-align: center;
+      padding: 120px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta::before {
+      content: '';
+      position: absolute;
+      bottom: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 900px; height: 500px;
+      background: radial-gradient(ellipse at center bottom, rgba(232,93,32,0.16) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta h2 {
+      font-size: clamp(28px, 4.5vw, 52px);
+      font-weight: 900;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(135deg, #ffffff 40%, rgba(232,93,32,0.9) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta p {
+      font-size: 15px;
+      color: var(--gray);
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 1;
+    }
+    .cta .btn {
+      font-size: 16px;
+      padding: 16px 40px;
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── GLOW NOISE OVERLAY ─── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: 0.4;
+    }
+
+    /* Floating orange orb top-right */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0;
+    }
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    .footer-copy { font-size: 13px; color: var(--gray2); }
+    .footer-links { display: flex; gap: 24px; list-style: none; }
+    .footer-links a {
+      font-size: 13px;
+      color: var(--gray);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--white); }
+
+    /* ─── REVEAL ─── */
+    [data-r] {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    [data-r].vis { opacity: 1; transform: none; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 1024px) {
+      .process-grid { grid-template-columns: repeat(2, 1fr); }
+      .formats-grid { grid-template-columns: repeat(2, 1fr); }
+      .extra-grid   { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .burger { display: flex; }
+
+      .hero-wrap {
+        grid-template-columns: 1fr;
+        min-height: auto;
+        padding-top: 80px;
+        padding-bottom: 64px;
+      }
+      .hero-right { display: none; }
+      .hero-stats { gap: 28px; }
+      .stat-n { font-size: 28px; }
+
+      .process-grid { grid-template-columns: 1fr; }
+      .formats-grid { grid-template-columns: 1fr; }
+      .extra-grid   { grid-template-columns: 1fr; }
+
+      section { padding: 64px 0; }
+      .s-header { margin-bottom: 36px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 30px; }
+      .hero-btns { flex-direction: column; }
+      .btn { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<header>
+  <nav>
+    <a href="#" class="logo">Lana Lansky</a>
+    <ul class="nav-links">
+      <li><a href="#process">Процесс</a></li>
+      <li><a href="#formats">Форматы</a></li>
+      <li><a href="#extra">Услуги</a></li>
+      <li><a href="#contact" class="nav-cta">Связаться</a></li>
+    </ul>
+    <button class="burger" onclick="toggleMenu()" aria-label="Меню">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#process" onclick="closeMenu()">Процесс</a>
+    <a href="#formats" onclick="closeMenu()">Форматы</a>
+    <a href="#extra" onclick="closeMenu()">Услуги</a>
+    <a href="#contact" onclick="closeMenu()">Связаться</a>
+  </div>
+</header>
+
+<!-- ─── HERO ─── -->
+<div style="position:relative; overflow:visible;">
+
+  <!-- Анимированный фон: орбы + луч -->
+  <div class="hero-bg">
+    <div class="hb-orb hb-orb1"></div>
+    <div class="hb-orb hb-orb2"></div>
+    <div class="hb-orb hb-orb3"></div>
+    <div class="hb-beam"></div>
+  </div>
+
+  <!-- Источники оранжевого света — уровень секции, правая половина -->
+  <!-- Верхний правый: контровой свет -->
+  <div class="photo-light photo-light-tr"></div>
+  <!-- Нижний правый: заполняющий тёплый -->
+  <div class="photo-light photo-light-br"></div>
+
+
+<div class="hero-wrap" style="position:relative;z-index:1;">
+  <div class="hero-left" data-r>
+    <h1 class="hero-title">Контент-система&nbsp;с окупаемым трафиком</h1>
+    <p class="hero-desc">
+      Поможем построить систему производства контента,<br>
+      которая регулярно привлекает заявки
+    </p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn btn-fill">Начать сейчас</a>
+      <a href="#formats" class="btn btn-ghost">Смотреть кейсы</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-n">500+</span>
+        <span class="stat-l">Роликов</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">50M+</span>
+        <span class="stat-l">Просмотров</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">100+</span>
+        <span class="stat-l">Клиентов</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right" data-r>
+    <div class="hero-visual">
+      <!-- Фото персонажа -->
+      <img src="./photo.png" alt="Lana Lansky" class="hero-photo" onerror="this.style.display='none'" />
+      <!-- Нижний градиент для читаемости пилюль -->
+      <div class="hero-visual-grad"></div>
+      <!-- Glass stats pill -->
+      <div style="position:absolute;bottom:28px;left:22px;right:22px;display:flex;gap:10px;z-index:2;">
+        <div style="flex:1;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:10px 14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);">
+          <div style="font-size:17px;font-weight:800;color:#fff;">500+</div>
+          <div style="font-size:10px;color:#777;margin-top:2px;">Роликов</div>
+        </div>
+        <div style="flex:1;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:10px 14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);">
+          <div style="font-size:17px;font-weight:800;color:#e85d20;">50M+</div>
+          <div style="font-size:10px;color:#777;margin-top:2px;">Просмотров</div>
+        </div>
+        <div style="flex:1;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.10);border-radius:10px;padding:10px 14px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);">
+          <div style="font-size:17px;font-weight:800;color:#fff;">100+</div>
+          <div style="font-size:10px;color:#777;margin-top:2px;">Клиентов</div>
+        </div>
+      </div>
+      <!-- Name tag top-left -->
+      <div style="position:absolute;top:22px;left:22px;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:7px 14px;backdrop-filter:blur(12px);z-index:2;">
+        <div class="hero-dot-circle"></div>
+        <span style="font-size:12px;color:#fff;font-weight:600;letter-spacing:0.04em;">Lana Lansky</span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ─── PROCESS ─── -->
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="s-header" data-r>
+      <span class="s-tag">Как мы работаем</span>
+      <h2 class="s-title">Процесс работы и сроки</h2>
+      <p class="s-sub">Прозрачная система работы с чёткими дедлайнами</p>
+    </div>
+    <div class="process-grid">
+      <div class="proc-card" data-r>
+        <span class="proc-badge">Сроки 1–3 дня</span>
+        <h3>Подготовка</h3>
+        <ul class="proc-list">
+          <li>Распаковка</li>
+          <li>Чат проекта</li>
+        </ul>
+      </div>
+      <div class="proc-card" data-r>
+        <span class="proc-badge">Сроки 5–6 дней</span>
+        <h3>Препродакшн</h3>
+        <ul class="proc-list">
+          <li>Идея</li>
+          <li>Утверждение идей</li>
+          <li>Сценарии</li>
+          <li>Утверждение сценариев</li>
+        </ul>
+      </div>
+      <div class="proc-card" data-r>
+        <span class="proc-badge">2 съёмочных дня</span>
+        <h3>Продакшн</h3>
+        <ul class="proc-list">
+          <li>Подбор локации</li>
+          <li>Съёмочный день</li>
+          <li>Организация съёмки</li>
+        </ul>
+      </div>
+      <div class="proc-card" data-r>
+        <span class="proc-badge">Первые дни</span>
+        <h3>Постпродакшн</h3>
+        <ul class="proc-list">
+          <li>План выкладки</li>
+          <li>Монтаж роликов</li>
+          <li>Аналитика</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── NICHE ─── -->
+<section class="niche">
+  <div class="wrap">
+    <h2 data-r>Мы раскачаем любую нишу</h2>
+    <p data-r>От бьюти до технологий — контент, который продаёт</p>
+  </div>
+</section>
+
+<!-- ─── FORMATS ─── -->
+<section class="formats" id="formats">
+  <div class="wrap">
+    <div class="s-header" data-r>
+      <span class="s-tag">Пакеты</span>
+      <h2 class="s-title">Форматы работы</h2>
+      <p class="s-sub">Мы работаем по предоплате 100% без скрытых платежей. Оплата идёт не за месяц, а за пакет</p>
+    </div>
+    <div class="formats-grid">
+
+      <div class="fmt-card" data-r>
+        <h3 class="fmt-title">Рилс 20 без съёмки</h3>
+        <ul class="fmt-list">
+          <li>Контент-план и идеи</li>
+          <li>Сценарии</li>
+          <li>Раскадровка (снимаете по гиду)</li>
+          <li>Монтаж роликов</li>
+          <li>Аналитика залётов, охватов</li>
+        </ul>
+        <a href="#contact" class="card-btn card-btn-outline">Выбрать пакет</a>
+      </div>
+
+      <div class="fmt-card popular" data-r>
+        <span class="pop-badge">Популярный</span>
+        <h3 class="fmt-title">Рилс 20 под ключ</h3>
+        <ul class="fmt-list">
+          <li>Контент-план и идеи</li>
+          <li>Сценарии</li>
+          <li>Съёмки роликов (2 захода)</li>
+          <li>Монтаж роликов</li>
+          <li>Аналитика залётов, охватов</li>
+        </ul>
+        <a href="#contact" class="card-btn card-btn-fill">Выбрать пакет</a>
+      </div>
+
+      <div class="fmt-card" data-r>
+        <h3 class="fmt-title">Рилс 30 роликов</h3>
+        <ul class="fmt-list">
+          <li>Контент-план и идеи</li>
+          <li>Сценарии</li>
+          <li>Раскадровка / Съёмки (2 захода)</li>
+          <li>Монтаж роликов</li>
+          <li>Аналитика залётов, охватов</li>
+        </ul>
+        <a href="#contact" class="card-btn card-btn-outline">Выбрать пакет</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── EXTRA SERVICES (из первого листа таблицы) ─── -->
+<section class="extra" id="extra">
+  <div class="wrap">
+    <div class="s-header" data-r>
+      <span class="s-tag">Также работаем с</span>
+      <h2 class="s-title">Дополнительные направления</h2>
+      <p class="s-sub">Комплексный маркетинг под ваш бизнес — прозрачные цены без скрытых платежей</p>
+    </div>
+    <div class="extra-grid">
+
+      <div class="extra-card" data-r onclick="toggleAcc(this)">
+        <div class="extra-header">
+          <div class="extra-icon">📱</div>
+          <div class="extra-meta">
+            <h3>Контент-маркетинг / SMM B2B</h3>
+            <p>Качественный контент и эффективная стратегия в соцсетях, которая увеличивает продажи.</p>
+          </div>
+          <span class="extra-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="extra-body">
+          <div class="extra-body-inner">
+            <ul class="extra-items">
+              <li>Стратегия и контент-план для одной сети</li>
+              <li>Ежемесячная фотосессия бренда</li>
+              <li>Видеосъёмка Reels + монтаж</li>
+              <li>Съёмка и монтаж сторис</li>
+              <li>Дизайн Stories и подготовка визуала</li>
+              <li>Написание текстов для публикаций</li>
+              <li>Аккаунт-менеджер и модерация</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="extra-card" data-r onclick="toggleAcc(this)">
+        <div class="extra-header">
+          <div class="extra-icon">🎯</div>
+          <div class="extra-meta">
+            <h3>Реклама и продвижение</h3>
+            <p>Таргет, контекст, SEO — полный спектр. Рекомендуемый бюджет от 100 000 ₽.</p>
+          </div>
+          <span class="extra-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="extra-body">
+          <div class="extra-body-inner">
+            <ul class="extra-items">
+              <li>Контекстная реклама Яндекс.Директ</li>
+              <li>Контекстная реклама Google Ads</li>
+              <li>SEO-продвижение</li>
+              <li>Таргетинг в Telegram, Instagram, ВКонтакте</li>
+              <li>Закупка рекламы в каналах Telegram</li>
+              <li>Закупка у блогеров в Instagram</li>
+              <li>Геомаркетинг: Яндекс Карты, 2ГИС, Авито</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="extra-card" data-r onclick="toggleAcc(this)">
+        <div class="extra-header">
+          <div class="extra-icon">🎬</div>
+          <div class="extra-meta">
+            <h3>Фото и видео продакшн</h3>
+            <p>Комплексное производство медиа-контента. КП формируется индивидуально.</p>
+          </div>
+          <span class="extra-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="extra-body">
+          <div class="extra-body-inner">
+            <ul class="extra-items">
+              <li>Промо-ролик (продюсирование + монтаж)</li>
+              <li>Репортажный день видеографа</li>
+              <li>1 ролик до 5 минут, сдача за сутки</li>
+              <li>Репортажный день фотографа</li>
+              <li>До 100 фотографий в обработке, сдача за сутки</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="extra-card" data-r onclick="toggleAcc(this)">
+        <div class="extra-header">
+          <div class="extra-icon">✏️</div>
+          <div class="extra-meta">
+            <h3>Брендинг</h3>
+            <p>Уникальная идентичность бренда, которая выделит вас на фоне конкурентов.</p>
+          </div>
+          <span class="extra-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="extra-body">
+          <div class="extra-body-inner">
+            <ul class="extra-items">
+              <li>Разработка многостраничного лендинга</li>
+              <li>Разработка одностраничного лендинга</li>
+              <li>Разработка брендбука</li>
+              <li>Персонаж и стикерпаки</li>
+              <li>Логотип и промо-материалы</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="extra-card" data-r onclick="toggleAcc(this)">
+        <div class="extra-header">
+          <div class="extra-icon">⭐</div>
+          <div class="extra-meta">
+            <h3>Личный бренд</h3>
+            <p>Стань лидером мнений. Reels под ключ, монетизация, встречи со стратегом.</p>
+          </div>
+          <span class="extra-arrow"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="extra-body">
+          <div class="extra-body-inner">
+            <ul class="extra-items">
+              <li>Персональные встречи со стратегом и продюсером</li>
+              <li>Производство Reels под ключ</li>
+              <li>Монетизация в блоге</li>
+              <li>Долгосрочное выстраивание личного бренда</li>
+              <li>Вход — после собеседования со стратегом</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA ─── -->
+<section class="cta" id="contact">
+  <div class="wrap">
+    <h2 data-r>Готовы создавать контент,<br>который продаёт?</h2>
+    <p data-r>Оставьте заявку и мы свяжемся с вами в течение 24 часов</p>
+    <a href="mailto:hello@reelsstudio.ru" class="btn btn-fill" data-r>Оставить заявку</a>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <span class="footer-copy">2024 Lana Lansky. Все права защищены.</span>
+      <ul class="footer-links">
+        <li><a href="https://t.me/" target="_blank">Telegram</a></li>
+        <li><a href="https://instagram.com/" target="_blank">Instagram</a></li>
+        <li><a href="https://wa.me/" target="_blank">WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Accordion — открывает всю строку сетки сразу
+  function toggleAcc(clickedCard) {
+    const allCards = Array.from(document.querySelectorAll('.extra-card'));
+    const wasOpen  = clickedCard.classList.contains('open');
+
+    // Находим «соседей по строке»: все карточки с тем же top в viewport.
+    // В CSS Grid все ячейки одной строки стартуют с одинакового top,
+    // даже если одна из них уже открыта и растянула высоту строки.
+    const clickedTop = Math.round(clickedCard.getBoundingClientRect().top);
+    const rowCards   = allCards.filter(
+      c => Math.round(c.getBoundingClientRect().top) === clickedTop
+    );
+
+    // Закрываем все
+    allCards.forEach(c => c.classList.remove('open'));
+
+    // Если строка была закрыта — открываем все карточки этой строки
+    if (!wasOpen) {
+      rowCards.forEach(c => c.classList.add('open'));
+    }
+  }
+
+  // Mobile menu
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+  document.addEventListener('click', (e) => {
+    const m = document.getElementById('mobileMenu');
+    if (!m.contains(e.target) && !document.querySelector('.burger').contains(e.target))
+      m.classList.remove('open');
+  });
+
+  // Scroll reveal
+  const els = document.querySelectorAll('[data-r]');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.classList.add('vis');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+
+  els.forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 0.08 + 's';
+    io.observe(el);
+  });
+</script>
+
+</body>
+</html>
